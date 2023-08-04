@@ -1,11 +1,11 @@
 # Tick dance aim trainer plugin
 ![icon](icon.png)
 
-Highlights randomly selected tiles.
+Highlights randomly generated tiles.
 
-Useful for improving your aim/movement for pvp and pvm, throw in switches between ground clicks for additional difficulty.
+Useful for improving your movement for PvP and PvM. Throw in switches between ground clicks for additional difficulty.
 
-Shift click the ground to set the area where tiles should be generated in.
+Shift right click the ground to set the area where tiles should be generated in.
 
 ![clicking_example](https://github.com/929482/tick-dance-aim-trainer/assets/88945446/9f2f1c76-83b7-4588-be50-bd57dca7c707)
 
