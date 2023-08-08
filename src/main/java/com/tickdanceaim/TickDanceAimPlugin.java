@@ -93,13 +93,10 @@ public class TickDanceAimPlugin extends Plugin
 			ticksInteracted = 0;
 		}
 
-		if (tile1 == null || tile2 == null) {
-			tile1 = client.getLocalPlayer().getWorldLocation();
-			tile2 = client.getLocalPlayer().getWorldLocation();
-		}
 
 
-		if (tile1.equals(client.getLocalPlayer().getWorldLocation())) {
+		if (tile1 != null && tile2 != null &&
+			tile1.equals(client.getLocalPlayer().getWorldLocation())) {
 			streak++;
 		} else if (streak > 2) {
 			if (config.printStreaks() || config.detailedStreaks())
@@ -115,34 +112,44 @@ public class TickDanceAimPlugin extends Plugin
 	private void printStreak(int s)
 	{
 		String msg = "Streak: "  + s + "     " +
-				gameArea.getWidth() + "x" + gameArea.getHeight();
-				if (config.detailedStreaks()) {
-					msg += "     " +
-							"Rate: " + config.updateRate() + "     Interact: " + config.interactionPause() + "     " +
-							" Tiles: " +
-							(config.walkTiles() ? "W" : "") +
-							(config.runTiles() ? "R" : "") +
-							(config.cardinalTiles() ? "C" : "") +
-							(config.diagonalTiles() ? "D" : "") +
-							(config.LTiles() ? "L" : "");
-				}
+			gameArea.getWidth() + "x" + gameArea.getHeight();
+		if (config.detailedStreaks()) {
+			msg += "     " +
+				"Rate: " + config.updateRate() + "     Interact: " + config.interactionPause() + "     " +
+				" Tiles: " +
+				(config.walkTiles() ? "W" : "") +
+				(config.runTiles() ? "R" : "") +
+				(config.cardinalTiles() ? "C" : "") +
+				(config.diagonalTiles() ? "D" : "") +
+				(config.LTiles() ? "L" : "");
+		}
 
 		client.addChatMessage(ChatMessageType.TRADE, "", msg, null);
 	}
 
 	private void updateDanceGame()
 	{
-		if (gameAreaCorner1 == null || gameAreaCorner2 == null || gameAreaCorner1 == gameAreaCorner2)
+		if (gameAreaCorner1 == null || gameArea == null)
 			return;
 
 		WorldPoint n = genNextTile();
+		if (n == null)
+			return;
 		tile1 = tile2;
 		tile2 = n;
 	}
 
 	private WorldPoint genNextTile()
 	{
+		if (gameArea == null)
+			return null;
+
 		ArrayList<WorldPoint> cand;
+		if (tile1 == null || !tile1.isInArea(gameArea))
+			tile1 = gameArea.toWorldPoint();
+		if (tile2 == null || !tile2.isInArea(gameArea))
+			tile2 = gameArea.toWorldPoint();
+
 		cand = genTileCandidates(tile2);
 		if (cand.size() > 0)
 			return cand.get(Math.abs(rnd.nextInt() % cand.size()));
@@ -165,7 +172,7 @@ public class TickDanceAimPlugin extends Plugin
 				continue;
 			if (pPos.equals(p))
 				continue;
-			if (p.equals(tile1) || p.equals(tile2) || p.equals(client.getLocalPlayer().getWorldLocation()))
+			if (p.equals(tile1) || p.equals(tile2))
 				continue;
 
 
