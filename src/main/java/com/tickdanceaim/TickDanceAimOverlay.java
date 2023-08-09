@@ -45,10 +45,17 @@ class TickDanceAimOverlay extends Overlay
     @Override
     public Dimension render(Graphics2D graphics)
     {
+        if (plugin.gameArea == null)
+            return null;
+        if (plugin.gameArea.distanceTo(client.getLocalPlayer().getWorldLocation()) > MAX_DRAW_DISTANCE)
+            return null;
+
         if (config.tile1Color().getAlpha() != 0)
             worldPointRender(graphics, plugin.tile1, config.tile1Color());
         if (config.tile2Color().getAlpha() != 0)
             worldPointRender(graphics, plugin.tile2, config.tile2Color());
+        if (!plugin.itemSwitches.get(plugin.activeSwitch).isEmpty())
+            itemSwitchRender(graphics, plugin.tile1, plugin.itemSwitches.get(plugin.activeSwitch));
         drawAreaBorder(graphics, plugin.gameArea);
         return null;
     }
@@ -71,11 +78,6 @@ class TickDanceAimOverlay extends Overlay
 
     private void drawAreaBorder(Graphics2D graphics, WorldArea a)
     {
-        if (a == null)
-            return;
-        if (a.distanceTo(client.getLocalPlayer().getWorldLocation()) > MAX_DRAW_DISTANCE)
-            return;
-
         LocalPoint corners[] = areaToLocalPoints(a);
         if (corners == null)
             return;
@@ -96,6 +98,21 @@ class TickDanceAimOverlay extends Overlay
         Stroke stroke = new BasicStroke(1.0f);
         graphics.setStroke(stroke);
         graphics.drawPolyline(pathX, pathY, 5);
+    }
+
+    void itemSwitchRender(Graphics2D graphics, WorldPoint wp, ItemSwitch itemSwitch)
+    {
+        LocalPoint lp = LocalPoint.fromWorld(client, wp);
+        if (lp == null || itemSwitch.icon == null) {
+            return;
+        }
+        Point sp = Perspective.localToCanvas(client, lp, plugin.gameArea.getPlane(), 0);
+
+        OverlayUtil.renderImageLocation(client, graphics, lp, itemSwitch.icon, 0);
+        int ticksRemaining = plugin.switchTick + config.switchRate() - plugin.tickCounter;
+        if (!plugin.switchPattern.isEmpty())
+            ticksRemaining = plugin.patternTicksRemaining();
+        OverlayUtil.renderTextLocation(graphics, sp, String.valueOf(ticksRemaining), Color.WHITE);
     }
 
     LocalPoint[] areaToLocalPoints(WorldArea a)
