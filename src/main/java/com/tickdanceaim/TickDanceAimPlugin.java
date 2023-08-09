@@ -61,8 +61,12 @@ public class TickDanceAimPlugin extends Plugin
 	public WorldPoint tile1 = new WorldPoint(0, 0, 0);
 	public WorldPoint tile2 = new WorldPoint(0, 0, 0);
 
+	private int successfulTicks = 0;
+	private int successfulSwitches = 0;
+	private int successfulTiles = 0;
+
+
 	public int tickCounter = 0;
-	private int streak = 0;
 	private int ticksInteracted = 0;
 	private int tickGameUpdated = 0;
 
@@ -136,41 +140,39 @@ public class TickDanceAimPlugin extends Plugin
 
 		int prevSwitch = activeSwitch;
 		updateActiveSwitch();
-		if (prevSwitch != activeSwitch &&
-				!itemSwitches.get(prevSwitch).isWearing(client)) {
-			streakFailed = true;
+		if (prevSwitch != activeSwitch) {
+			if (!itemSwitches.get(prevSwitch).isWearing(client)) {
+				streakFailed = true;
+			} else {
+				successfulSwitches += itemSwitches.get(prevSwitch).items.size();
+			}
 		}
 
 		if (streakFailed) {
-			if (streak > config.updateRate() + 1) {
-				if (config.printStreaks() || config.detailedStreaks())
-					printStreak(streak);
-				streak = 0;
-			} else {
-				streak = 0;
+			if (successfulTicks > config.updateRate() + 1) {
+				if (config.printStreaks())
+					printStreak();
 			}
+			successfulTicks = 0;
+			successfulTiles = 0;
+			successfulSwitches = 0;
 		} else {
-			streak++;
+			successfulTicks++;
 		}
 
-		if (updateRequired)
+		if (updateRequired) {
+			if (!streakFailed)
+				successfulTiles++;
 			updateTiles();
+		}
 	}
 
-	private void printStreak(int s)
+	private void printStreak()
 	{
-		String msg = "Streak: "  + s + "     " +
+		String msg = "Tick Dance: Ticks "  + successfulTicks + "     " +
+				"Tiles " + successfulTiles + "     " +
+				"Switches " + successfulSwitches + "     " +
 			gameArea.getWidth() + "x" + gameArea.getHeight();
-		if (config.detailedStreaks()) {
-			msg += "     " +
-				"Rate: " + config.updateRate() + "     Interact: " + config.interactionPause() + "     " +
-				" Tiles: " +
-				(config.walkTiles() ? "W" : "") +
-				(config.runTiles() ? "R" : "") +
-				(config.cardinalTiles() ? "C" : "") +
-				(config.diagonalTiles() ? "D" : "") +
-				(config.LTiles() ? "L" : "");
-		}
 
 		client.addChatMessage(ChatMessageType.TRADE, "", msg, null);
 	}

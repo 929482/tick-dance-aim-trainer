@@ -283,17 +283,6 @@ public interface TickDanceAimConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-			keyName = "detailedStreaks",
-			name = "Print detailed streaks",
-			description = "Print detailed streaks, make sure trade offers are on in-game",
-			position = 9
-	)
-	default boolean detailedStreaks()
-	{
-		return false;
-	}
-
 
 	@Alpha
 	@ConfigItem(
