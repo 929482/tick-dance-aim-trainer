@@ -142,7 +142,7 @@ public class TickDanceAimPlugin extends Plugin
 		}
 
 		if (streakFailed) {
-			if (streak > 2) {
+			if (streak > config.updateRate() + 1) {
 				if (config.printStreaks() || config.detailedStreaks())
 					printStreak(streak);
 				streak = 0;

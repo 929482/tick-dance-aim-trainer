@@ -275,7 +275,7 @@ public interface TickDanceAimConfig extends Config
 	@ConfigItem(
 			keyName = "printStreaks",
 			name = "Print streaks",
-			description = "Print streaks",
+			description = "Print streaks, make sure trade offers are on in-game",
 			position = 8
 	)
 	default boolean printStreaks()
@@ -286,7 +286,7 @@ public interface TickDanceAimConfig extends Config
 	@ConfigItem(
 			keyName = "detailedStreaks",
 			name = "Print detailed streaks",
-			description = "Print detailed streaks",
+			description = "Print detailed streaks, make sure trade offers are on in-game",
 			position = 9
 	)
 	default boolean detailedStreaks()
