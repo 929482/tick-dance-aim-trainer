@@ -108,6 +108,7 @@ public class TickDanceAimPlugin extends Plugin
 	@Subscribe
 	private void onGameTick(GameTick gameTick)
 	{
+		tickCounter++;
 		if (gameArea == null)
 			return;
 		if (client.getLocalPlayer().getWorldLocation().distanceTo(gameArea) > 15)
@@ -117,7 +118,6 @@ public class TickDanceAimPlugin extends Plugin
 		boolean updateRequired = false;
 		boolean streakFailed = false;
 
-		tickCounter++;
 		if (tickGameUpdated + config.updateRate() <= tickCounter) {
 			if (client.getLocalPlayer().getInteracting() == null) {
 				ticksInteracted = 0;
@@ -316,6 +316,7 @@ public class TickDanceAimPlugin extends Plugin
 					if (target != null) {
 						gameAreaCorner1 = target.getWorldLocation();
 						setArea(gameAreaCorner1, gameAreaCorner2);
+						tickGameUpdated = 0;
 					}
 				});
 
@@ -328,6 +329,7 @@ public class TickDanceAimPlugin extends Plugin
 					if (target != null) {
 						gameAreaCorner2 = target.getWorldLocation();
 						setArea(gameAreaCorner1, gameAreaCorner2);
+						tickGameUpdated = 0;
 					}
 				});
 		}
