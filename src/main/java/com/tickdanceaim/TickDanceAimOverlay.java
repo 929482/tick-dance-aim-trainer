@@ -107,12 +107,15 @@ class TickDanceAimOverlay extends Overlay
             return;
         }
         Point sp = Perspective.localToCanvas(client, lp, plugin.gameArea.getPlane(), 0);
+        if (sp == null)
+            return;
 
         OverlayUtil.renderImageLocation(client, graphics, lp, itemSwitch.icon, 0);
         int ticksRemaining = plugin.switchTick + config.switchRate() - plugin.tickCounter;
         if (!plugin.switchPattern.isEmpty())
             ticksRemaining = plugin.patternTicksRemaining();
-        OverlayUtil.renderTextLocation(graphics, sp, String.valueOf(ticksRemaining), Color.WHITE);
+        if (ticksRemaining >= 0)
+            OverlayUtil.renderTextLocation(graphics, sp, String.valueOf(ticksRemaining), Color.WHITE);
     }
 
     LocalPoint[] areaToLocalPoints(WorldArea a)
