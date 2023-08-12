@@ -137,7 +137,8 @@ public class TickDanceAimPlugin extends Plugin
 				!tile1.equals(client.getLocalPlayer().getWorldLocation())) {
 			streakFailed = true;
 		} else {
-			successfulTiles++;
+			if (updateRequired)
+				successfulTiles++;
 		}
 
 		int prevSwitch = activeSwitch;
