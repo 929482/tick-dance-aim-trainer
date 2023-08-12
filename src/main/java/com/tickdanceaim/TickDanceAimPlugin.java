@@ -136,6 +136,8 @@ public class TickDanceAimPlugin extends Plugin
 		if (tile1 != null && tile2 != null && updateRequired &&
 				!tile1.equals(client.getLocalPlayer().getWorldLocation())) {
 			streakFailed = true;
+		} else {
+			successfulTiles++;
 		}
 
 		int prevSwitch = activeSwitch;
@@ -161,18 +163,21 @@ public class TickDanceAimPlugin extends Plugin
 		}
 
 		if (updateRequired) {
-			if (!streakFailed)
-				successfulTiles++;
 			updateTiles();
 		}
 	}
 
 	private void printStreak()
 	{
+		if (successfulTicks <= 0)
+			return;
+		float tilesAvg = ((float)successfulTiles / (float)(successfulTicks + 1));
+		float switchesAvg = ((float)successfulSwitches / (float)(successfulTicks + 1));
 		String msg = "Tick Dance: Ticks "  + successfulTicks + "     " +
-				"Tiles " + successfulTiles + "     " +
-				"Switches " + successfulSwitches + "     " +
-			gameArea.getWidth() + "x" + gameArea.getHeight();
+				"tiles/tick " + String.format("%.2f", tilesAvg) + "     ";
+		if (successfulSwitches > 0)
+				msg += "switches/tick " + String.format("%.2f", switchesAvg) + "     " ;
+		msg += gameArea.getWidth() + "x" + gameArea.getHeight();
 
 		client.addChatMessage(ChatMessageType.TRADE, "", msg, null);
 	}
