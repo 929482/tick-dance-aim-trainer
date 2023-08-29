@@ -315,9 +315,14 @@ public class TickDanceAimPlugin extends Plugin
 				return;
 			}
 
+			MenuEntry subMenu = client.createMenuEntry(-1)
+					.setOption("Tick Dance")
+					.setType(MenuAction.RUNELITE_SUBMENU);
+
 			client.createMenuEntry(-1)
-				.setOption("Tick dance corner 1")
+				.setOption("Set corner 1")
 				.setType(MenuAction.RUNELITE)
+				.setParent(subMenu)
 				.onClick(e ->
 				{
 					Tile target = client.getSelectedSceneTile();
@@ -329,8 +334,9 @@ public class TickDanceAimPlugin extends Plugin
 				});
 
 			client.createMenuEntry(-2)
-				.setOption("Tick dance corner 2")
+				.setOption("Set corner 2")
 				.setType(MenuAction.RUNELITE)
+				.setParent(subMenu)
 				.onClick(e ->
 				{
 					Tile target = client.getSelectedSceneTile();
@@ -354,12 +360,17 @@ public class TickDanceAimPlugin extends Plugin
 	{
 		final Widget w = event.getMenuEntry().getWidget();
 		int itemId = w.getItemId();
+		MenuEntry subMenu = client.createMenuEntry(-1)
+				.setOption("Tick Dance")
+				.setTarget(event.getTarget())
+				.setType(MenuAction.RUNELITE_SUBMENU);
 		for (int i = 0; i < itemSwitches.size(); ++i) {
 			final int ii = i;
 			if (!itemSwitches.get(ii).items.contains(itemId)) {
 				client.createMenuEntry(-ii - 1)
-					.setOption("Add item to switch " + (ii + 1))
+					.setOption("Add to switch " + (ii + 1))
 					.setType(MenuAction.RUNELITE)
+					.setParent(subMenu)
 					.onClick(e ->
 					{
 						itemSwitches.get(ii).items.add(itemId);
@@ -368,8 +379,9 @@ public class TickDanceAimPlugin extends Plugin
 					});
 			} else {
 				client.createMenuEntry(-ii - 1)
-					.setOption("Remove item from switch " + (ii + 1))
+					.setOption("Remove from switch " + (ii + 1))
 					.setType(MenuAction.RUNELITE)
+					.setParent(subMenu)
 					.onClick(e ->
 					{
 						itemSwitches.get(ii).items.remove((Object) itemId);
